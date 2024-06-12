@@ -15,3 +15,35 @@ for /f "tokens=*" %%i in ('docker images -a --format "{{.Repository}}:{{.Tag}}" 
 )
 
 endlocal
+
+b) clearing old containers:
+@echo off
+echo Start clearing old containers
+
+REM List and remove old containers matching the name pattern
+for /F "tokens=1" %%i in ('docker ps -a -q --filter "name=demo1-0.0.1-SNAPSHOT"') do (
+    docker rm -f %%i
+)
+
+REM Check if the cleanup succeeded
+if %errorlevel% neq 0 (
+    echo Clearing old containers failed
+    exit /b 1
+)
+
+echo Finished clearing old containers
+
+c) running container of last created Image:
+@echo off
+echo Start running container of last created Image
+
+REM Run the Docker container with the name and tag including the build number
+docker run -d -p 9090:9090 --name=demo1-0.0.1-SNAPSHOT%BUILD_NUMBER% mohammedaljer/demo1:demo1-0.0.1-SNAPSHOT%BUILD_NUMBER%
+
+REM Check if the docker run command succeeded
+if %errorlevel% neq 0 (
+    echo Failed to run the Docker container
+    exit /b 1
+)
+
+echo Finished running container of last created Image

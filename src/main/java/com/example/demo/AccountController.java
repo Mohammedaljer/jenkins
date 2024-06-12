@@ -18,5 +18,5 @@ public class AccountController {
         return accountService.createAccount(name, password, email);
     }
 
-    // Add more endpoints as needed
+   
 }

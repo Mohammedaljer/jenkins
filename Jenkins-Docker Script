@@ -1,0 +1,17 @@
+a) Script to clean old images:
+
+@echo off
+echo Start Clearing old docker images
+
+setlocal enabledelayedexpansion
+
+for /f "tokens=*" %%i in ('docker images -a --format "{{.Repository}}:{{.Tag}}" ^| findstr "mohammedaljer/demo1"') do (
+    docker rmi -f %%i
+    if !errorlevel! equ 0 (
+        echo Clearing old image %%i succeeded
+    ) else (
+        echo Clearing old image %%i failed
+    )
+)
+
+endlocal
